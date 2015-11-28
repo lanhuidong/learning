@@ -10,6 +10,7 @@
     <modules>
         <module>learning-mongodb</module>
         <module>learning-netty</module>
+        <module>learning-redis</module>
         <module>learning-zookeeper</module>
     </modules>
     <packaging>pom</packaging>
