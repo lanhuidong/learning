@@ -26,6 +26,17 @@ public class ZNodeNameTest {
         assertOrderedNodeNames(names, expected);
     }
 
+    @Test
+    public void test(){
+        SortedSet<ZNodeName> nodeNames = new TreeSet<>();
+        String[] names = {"x-5", "x-1", "x-3", "x-100", "x-7"};
+        for (String name : names) {
+            nodeNames.add(new ZNodeName(name));
+        }
+        SortedSet<ZNodeName> lessThan = nodeNames.headSet(new ZNodeName("x-5"));
+        System.out.println(lessThan.size());
+    }
+
     protected void assertOrderedNodeNames(String[] names, String[] expected) {
         Assert.assertEquals("The two arrays should be the same size!", names.length, expected.length);
         SortedSet<ZNodeName> nodeNames = new TreeSet<>();

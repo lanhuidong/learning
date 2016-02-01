@@ -27,14 +27,14 @@ public class ZKLockTest {
     public static void incrWithoutLock() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         CountDownLatch start = new CountDownLatch(1);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10000; i++) {
             executorService.execute(() -> {
                 try {
                     start.await();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                for (int j = 0; j < 10000; j++) {
+                for (int j = 0; j < 10; j++) {
                     ZKLockTest.i++;
                 }
             });
@@ -55,11 +55,16 @@ public class ZKLockTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                for (int j = 0; j < 10000; j++) {
+                for (int j = 0; j < 2; j++) {
                     try {
-                        ZooKeeper zk = new ZooKeeper("10.12.13.111:2181", 5000, watcher);
+                        ZooKeeper zk = new ZooKeeper("192.168.0.104:2181", 5000, watcher);
                         ZKLock<Integer> lock = new ZKLock<>(zk, (ZKCallback<Integer>) () -> {
                             ZKLockTest.j++;
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             return null;
                         });
                         lock.tryLock("/test", "count");
@@ -70,8 +75,8 @@ public class ZKLockTest {
             });
         }
         start.countDown();
-        executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+//        executorService.shutdown();
+//        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         System.out.println("j=" + j);
     }
 

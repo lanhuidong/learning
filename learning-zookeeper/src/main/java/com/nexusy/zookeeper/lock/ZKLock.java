@@ -29,30 +29,38 @@ public class ZKLock<T> implements Future<T> {
     }
 
     public void tryLock(String path, String prefix) throws KeeperException, InterruptedException {
-        String name = zookeeper.create(path + "/" + prefix, null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+        String name = zookeeper.create(path + "/" + prefix + "-", null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
         ZNodeName lockName = new ZNodeName(name);
         do {
             List<String> childrenNames = zookeeper.getChildren(path, false);
             SortedSet<ZNodeName> sortedNames = new TreeSet<>();
             for (String childName : childrenNames) {
-                sortedNames.add(new ZNodeName(childName));
+                sortedNames.add(new ZNodeName(path + "/" + childName));
             }
 
+            String ownerId = sortedNames.first().getName();
             SortedSet<ZNodeName> lessThanMe = sortedNames.headSet(lockName);
             if (!lessThanMe.isEmpty()) {
                 String lastChildId = lessThanMe.last().getName();
                 Stat stat = zookeeper.exists(lastChildId, new LockWatcher());
-                if (stat == null) {
-                    value = callback.doInLock();
-                    isDone.notifyAll();
+                System.out.println("****");
+                if (stat != null) {
+                    break;
+                } else {
+                    System.out.println("last child id:" + lastChildId);
                 }
-                break;
             } else {
                 //当前节点是最小的节点, 表示已获得锁, 开始执行互斥操作
-                value = callback.doInLock();
-                isDone.notify();
-                break;
+                if (ownerId != null && name != null && ownerId.equals(name)) {
+                    System.out.println("xx");
+                    value = callback.doInLock();
+                    zookeeper.close();
+                    synchronized (isDone) {
+                        isDone.notifyAll();
+                    }
+                    break;
+                }
             }
         } while (true);
     }
@@ -96,7 +104,15 @@ public class ZKLock<T> implements Future<T> {
              */
             if (event.getType() == Event.EventType.NodeDeleted) {
                 value = callback.doInLock();
-                isDone.notifyAll();
+                try {
+                    zookeeper.close();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                synchronized (isDone) {
+                    isDone.notifyAll();
+                }
+                System.out.println(event.getPath());
             }
         }
     }
