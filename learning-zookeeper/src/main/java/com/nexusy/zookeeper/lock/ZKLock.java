@@ -43,20 +43,17 @@ public class ZKLock<T> implements Future<T> {
             SortedSet<ZNodeName> lessThanMe = sortedNames.headSet(lockName);
             if (!lessThanMe.isEmpty()) {
                 String lastChildId = lessThanMe.last().getName();
-                Stat stat = zookeeper.exists(lastChildId, new LockWatcher());
-                System.out.println("****");
+                Stat stat = zookeeper.exists(lastChildId, new LockWatcher(name));
                 if (stat != null) {
                     break;
-                } else {
-                    System.out.println("last child id:" + lastChildId);
                 }
             } else {
                 //当前节点是最小的节点, 表示已获得锁, 开始执行互斥操作
                 if (ownerId != null && name != null && ownerId.equals(name)) {
-                    System.out.println("xx");
                     value = callback.doInLock();
-                    zookeeper.close();
+                    zookeeper.delete(ownerId, -1);
                     synchronized (isDone) {
+                        isDone.compareAndSet(false, true);
                         isDone.notifyAll();
                     }
                     break;
@@ -97,6 +94,12 @@ public class ZKLock<T> implements Future<T> {
 
     private class LockWatcher implements Watcher {
 
+        private String id;
+
+        public LockWatcher(String id) {
+            this.id = id;
+        }
+
         @Override
         public void process(WatchedEvent event) {
             /**
@@ -105,14 +108,14 @@ public class ZKLock<T> implements Future<T> {
             if (event.getType() == Event.EventType.NodeDeleted) {
                 value = callback.doInLock();
                 try {
-                    zookeeper.close();
-                } catch (InterruptedException e) {
+                    zookeeper.delete(id, -1);
+                } catch (InterruptedException | KeeperException e) {
                     e.printStackTrace();
                 }
                 synchronized (isDone) {
+                    isDone.compareAndSet(false, true);
                     isDone.notifyAll();
                 }
-                System.out.println(event.getPath());
             }
         }
     }
