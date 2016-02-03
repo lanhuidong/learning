@@ -13,6 +13,7 @@
         <module>learning-rabbitmq</module>
         <module>learning-redis</module>
         <module>learning-spring</module>
+        <module>learning-tomcat</module>
         <module>learning-zookeeper</module>
     </modules>
     <packaging>pom</packaging>
