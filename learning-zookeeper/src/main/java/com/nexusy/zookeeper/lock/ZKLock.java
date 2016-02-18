@@ -20,6 +20,9 @@ public class ZKLock<T> implements Future<T> {
 
     private ZooKeeper zookeeper;
     private ZKCallback<T> callback;
+    private String path;
+    private String name;
+    private ZNodeName lockName;
     private T value;
     private final AtomicBoolean isDone = new AtomicBoolean(false);
 
@@ -28,11 +31,15 @@ public class ZKLock<T> implements Future<T> {
         this.callback = callback;
     }
 
-    public void tryLock(String path, String prefix) throws KeeperException, InterruptedException {
-        String name = zookeeper.create(path + "/" + prefix + "-", null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
+    private void createChild(String path, String prefix) throws KeeperException, InterruptedException {
+        name = zookeeper.create(path + "/" + prefix + "-", null, ZooDefs.Ids.OPEN_ACL_UNSAFE,
                 CreateMode.EPHEMERAL_SEQUENTIAL);
-        ZNodeName lockName = new ZNodeName(name);
+        lockName = new ZNodeName(name);
+    }
+
+    private void lock() throws KeeperException, InterruptedException {
         do {
+            //2.获取所有lock节点下的子节点，不要设置watch标志
             List<String> childrenNames = zookeeper.getChildren(path, false);
             SortedSet<ZNodeName> sortedNames = new TreeSet<>();
             for (String childName : childrenNames) {
@@ -42,13 +49,15 @@ public class ZKLock<T> implements Future<T> {
             String ownerId = sortedNames.first().getName();
             SortedSet<ZNodeName> lessThanMe = sortedNames.headSet(lockName);
             if (!lessThanMe.isEmpty()) {
+                //4.否则客户端在比它小的最大节点上调用exists()方法，并watch该节点的状态
                 String lastChildId = lessThanMe.last().getName();
-                Stat stat = zookeeper.exists(lastChildId, new LockWatcher(name));
+                Stat stat = zookeeper.exists(lastChildId, new LockWatcher());
                 if (stat != null) {
                     break;
                 }
+                //5.如果exists()返回false，则回到第2步；否则等待监听的节点被删除，然后再回到步骤2
             } else {
-                //当前节点是最小的节点, 表示已获得锁, 开始执行互斥操作
+                //3.如果步骤1创建的节点是所有子节点中最小的节点，则该客户端获得锁，退出协议
                 if (ownerId != null && name != null && ownerId.equals(name)) {
                     value = callback.doInLock();
                     zookeeper.delete(ownerId, -1);
@@ -60,6 +69,13 @@ public class ZKLock<T> implements Future<T> {
                 }
             }
         } while (true);
+    }
+
+    public void tryLock(String path, String prefix) throws KeeperException, InterruptedException {
+        //1.首先在lock节点下创建一个ephemeral_sequence的节点
+        this.path = path;
+        createChild(path, prefix);
+        lock();
     }
 
     @Override
@@ -94,27 +110,16 @@ public class ZKLock<T> implements Future<T> {
 
     private class LockWatcher implements Watcher {
 
-        private String id;
-
-        public LockWatcher(String id) {
-            this.id = id;
-        }
-
         @Override
         public void process(WatchedEvent event) {
             /**
              * 如果监听的节点被删除, 则表示获得了锁, 开始执行互斥操作
              */
             if (event.getType() == Event.EventType.NodeDeleted) {
-                value = callback.doInLock();
                 try {
-                    zookeeper.delete(id, -1);
-                } catch (InterruptedException | KeeperException e) {
+                    lock();
+                } catch (KeeperException | InterruptedException e) {
                     e.printStackTrace();
-                }
-                synchronized (isDone) {
-                    isDone.compareAndSet(false, true);
-                    isDone.notifyAll();
                 }
             }
         }
