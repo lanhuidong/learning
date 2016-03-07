@@ -1,7 +1,5 @@
 package com.nexusy.java.classloader;
 
-import com.sun.xml.internal.rngom.parse.host.Base;
-
 /**
  * @author lanhuidong
  * @since 2016-02-20
@@ -15,6 +13,8 @@ public class ClassLoaderTest {
 
         ClassLoader integerClassLoader = ClassLoaderTest.class.getClassLoader();
         System.out.println("ClassLoaderTest's ClassLoader: " + integerClassLoader);
+        System.out.println("ClassLoaderTest's ClassLoader parent: " + integerClassLoader.getParent());
+        System.out.println("System ClassLoader: " + ClassLoader.getSystemClassLoader());
 
         //数组类型的getClassLoader()方法返回的ClassLoader和数组的元素类型的getClassLoader()的返回结果一致
         int[] array1 = new int[1];
