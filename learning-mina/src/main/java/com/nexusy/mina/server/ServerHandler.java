@@ -1,4 +1,4 @@
-package com.nexusy.mina;
+package com.nexusy.mina.server;
 
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -10,7 +10,7 @@ import java.util.Date;
  * @author lanhuidong
  * @since 2016-03-12
  */
-public class TimeServerHandler extends IoHandlerAdapter {
+public class ServerHandler extends IoHandlerAdapter {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
