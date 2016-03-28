@@ -24,7 +24,9 @@ public class ServletProcessor {
             URLClassLoader loader = new URLClassLoader(urls);
             Class myClass = loader.loadClass(servletName);
             Servlet servlet = (Servlet) myClass.newInstance();
-            servlet.service(request, response);
+            RequestFacade requestFacade = new RequestFacade(request);
+            ResponseFacade responseFacade = new ResponseFacade(response);
+            servlet.service(requestFacade, responseFacade);
         } catch (Exception e) {
             e.printStackTrace();
         }
