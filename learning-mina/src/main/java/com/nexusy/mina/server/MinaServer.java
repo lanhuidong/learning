@@ -17,7 +17,7 @@ import java.net.InetSocketAddress;
 public class MinaServer {
 
     public static void main(String[] args) throws IOException {
-        IoAcceptor acceptor = new NioSocketAcceptor();
+        IoAcceptor acceptor = new NioSocketAcceptor(1);
         acceptor.getFilterChain().addLast("logger", new LoggingFilter());
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MyCodecFactory()));
         acceptor.getSessionConfig().setReadBufferSize(2048);
