@@ -1,7 +1,8 @@
 package com.nexusy.mina.server;
 
-import com.nexusy.mina.json.JsonMapper;
 import com.nexusy.mina.pack.Data;
+import com.nexusy.mina.serializer.Serializer;
+import com.nexusy.mina.serializer.SerializerFactory;
 import com.nexusy.mina.vo.ValueObject;
 import org.apache.mina.core.session.IoSession;
 
@@ -21,7 +22,8 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
-        ValueObject object = JsonMapper.readValue(pack.getContent(), ValueObject.class);
+        Serializer<ValueObject> serializer = SerializerFactory.createSerializer(pack.getContentType());
+        ValueObject object = serializer.deserialize(pack, ValueObject.class);
         System.out.println(Thread.currentThread().getName() + " sleep " + object.getaLong() + "ms");
         try {
             Thread.sleep(object.getaLong());
