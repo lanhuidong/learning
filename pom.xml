@@ -17,6 +17,7 @@
         <module>learning-tomcat</module>
         <module>learning-zookeeper</module>
         <module>learning-mina</module>
+        <module>learning-springsecurity</module>
     </modules>
     <packaging>pom</packaging>
 
