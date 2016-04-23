@@ -10,9 +10,11 @@
     <http pattern="/" security="none"/>
     <http pattern="/index.shtml" security="none"/>
     <http>
-        <intercept-url pattern="/**" access="hasRole('USER')"/>
-        <form-login/>
-        <logout/>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/user/**" access="hasRole('USER')"/>
+        <form-login login-page="/index.shtml" login-processing-url="/login.shtml" default-target-url="/user/index.shtml"/>
+        <logout logout-success-url="/index.shtml"/>
+        <csrf disabled="true" />
     </http>
 
     <authentication-manager>
