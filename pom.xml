@@ -18,6 +18,7 @@
         <module>learning-zookeeper</module>
         <module>learning-mina</module>
         <module>learning-springsecurity</module>
+        <module>learning-cglib</module>
     </modules>
     <packaging>pom</packaging>
 
