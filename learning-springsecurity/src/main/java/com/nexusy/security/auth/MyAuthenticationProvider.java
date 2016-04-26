@@ -25,15 +25,20 @@ public class MyAuthenticationProvider extends DaoAuthenticationProvider {
         MyAuthenticationToken token = (MyAuthenticationToken) authentication;
         User user = (User) token.getPrincipal();
         user = (User) getUserDetailsService().loadUserByUsername(user.getUsername());
-        Set<Role> roles = new HashSet<>();
-        if ("user".equals(user.getUsername())) {
-            Role role = new Role("ROLE_USER");
-            roles.add(role);
-        } else if ("admin".equals(user.getUsername())) {
-            Role role = new Role("ROLE_ADMIN");
-            roles.add(role);
+        if (user != null) {
+            Set<Role> roles = new HashSet<>();
+            if ("user".equals(user.getUsername())) {
+                Role role = new Role("ROLE_USER");
+                roles.add(role);
+            } else if ("admin".equals(user.getUsername())) {
+                Role role = new Role("ROLE_ADMIN");
+                roles.add(role);
+            }
+            return new MyAuthenticationToken(roles, token.getCredentials(), user);
+        } else {
+            throw new AuthenticationException("User not found!") {
+            };
         }
-        return new MyAuthenticationToken(roles, token.getCredentials(), user);
     }
 
 }

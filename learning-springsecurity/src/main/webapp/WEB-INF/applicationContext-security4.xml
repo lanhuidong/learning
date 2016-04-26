@@ -10,20 +10,18 @@
     <http pattern="/" security="none"/>
     <http pattern="/index.shtml" security="none"/>
     <http>
-        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
-        <intercept-url pattern="/user/**" access="hasRole('USER')"/>
         <form-login login-page="/index.shtml"/>
         <logout logout-success-url="/index.shtml"/>
         <csrf disabled="true"/>
         <anonymous enabled="false"/>
-        <custom-filter ref="myAuthenticationFilter" after="REMEMBER_ME_FILTER"/>
+        <custom-filter ref="myAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
         <custom-filter ref="resourceSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR"/>
     </http>
 
     <beans:bean id="myAuthenticationFilter" class="com.nexusy.security.auth.MyAuthenticationFilter">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="filterProcessesUrl" value="/login.shtml"/>
-        <beans:property name="authenticationFailureUrl" value="/index.html?error=1"/>
+        <beans:property name="authenticationFailureUrl" value="/index.shtml?error=1"/>
     </beans:bean>
 
     <authentication-manager alias="authenticationManager">
@@ -39,7 +37,7 @@
         <beans:property name="authenticationManager" ref="authenticationManager"/>
         <beans:property name="accessDecisionManager" ref="myAccessDecisionManager"/>
         <beans:property name="securityMetadataSource" ref="myMetadataSource"/>
-        <beans:property name="observeOncePerRequest" value="false"/>
+        <beans:property name="observeOncePerRequest" value="true"/>
     </beans:bean>
 
     <beans:bean id="myAccessDecisionManager" class="com.nexusy.security.auth.MyAccessDecisionManager">

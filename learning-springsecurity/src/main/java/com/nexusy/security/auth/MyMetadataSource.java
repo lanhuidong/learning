@@ -53,18 +53,18 @@ public class MyMetadataSource implements FilterInvocationSecurityMetadataSource 
         if (MySecurityContext.getCurrentUser() == null) {
             HttpServletResponse response = ((FilterInvocation) object).getResponse();
             try {
-                response.sendRedirect("/login.html");
+                response.sendRedirect("/index.shtml");
             } catch (IOException e) {
             }
             throw new AccessDeniedException("Access Denied");
         }
 
-        String requestURL = ((FilterInvocation) object).getRequest().getServletPath();
+        String requestURL = ((FilterInvocation) object).getRequestUrl();
 
         Iterator<String> it = urlResourceMap.keySet().iterator();
         while (it.hasNext()) {
             String url = it.next();
-            if (pathMatcher.match(requestURL, url)) {
+            if (pathMatcher.match(url, requestURL)) {
                 return urlResourceMap.get(url);
             }
         }
@@ -78,7 +78,7 @@ public class MyMetadataSource implements FilterInvocationSecurityMetadataSource 
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return true;
+        return clazz.isAssignableFrom(FilterInvocation.class);
     }
 
 }
