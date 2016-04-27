@@ -1,0 +1,14 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+
+    <weaver options="-showWeaveInfo">
+        <!-- only weave classes in our application-specific packages -->
+        <include within="com.nexusy.spring.aop.ltw.*"/>
+    </weaver>
+
+    <aspects>
+        <!-- weave in just this aspect -->
+        <aspect name="com.nexusy.spring.aop.ltw.ProfilingAspect"/>
+    </aspects>
+
+</aspectj>
