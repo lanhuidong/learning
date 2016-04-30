@@ -12,18 +12,24 @@
     <http>
         <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
         <intercept-url pattern="/user/**" access="hasRole('USER')"/>
-        <form-login login-page="/index.shtml" login-processing-url="/login.shtml" default-target-url="/user/index.shtml"/>
+        <form-login login-page="/index.shtml" login-processing-url="/login.shtml"
+                    default-target-url="/user/index.shtml"/>
         <logout logout-success-url="/index.shtml"/>
-        <csrf disabled="true" />
+        <csrf disabled="true"/>
     </http>
 
     <authentication-manager>
         <authentication-provider>
+            <password-encoder ref="bcryptEncoder"/>
             <user-service>
-                <user name="user" password="111111" authorities="ROLE_USER"/>
-                <user name="admin" password="123456" authorities="ROLE_USER, ROLE_ADMIN"/>
+                <user name="user" password="$2a$10$qb1VEGAG8W1alIJAqJOVheVaJ7V0HVBoVVZFQZqZEA3jjCJwovk1e"
+                      authorities="ROLE_USER"/>
+                <user name="admin" password="$2a$10$LRqxiC4TEODVXY9Fhx7Mje3l8smnAZhuZPuOPq9Q3RDwjNFEN559i"
+                      authorities="ROLE_USER, ROLE_ADMIN"/>
             </user-service>
         </authentication-provider>
     </authentication-manager>
+
+    <beans:bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 </beans:beans>

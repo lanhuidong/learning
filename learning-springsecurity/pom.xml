@@ -56,6 +56,13 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.22</version>
         </dependency>
+
+        <!--配置junit-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>learning-springsecurity</finalName>
