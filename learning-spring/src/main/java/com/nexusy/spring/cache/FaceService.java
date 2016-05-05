@@ -1,5 +1,7 @@
 package com.nexusy.spring.cache;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.ArrayList;
@@ -25,6 +27,28 @@ public class FaceService {
             e.printStackTrace();
         }
         return faces;
+    }
+
+    @CachePut(cacheNames = "faces")
+    public List<Face> replaceFaces() {
+        System.out.println(Thread.currentThread().getName() + " replace all faces.");
+        List<Face> faces = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Face face = new Face();
+            face.setId(i);
+            faces.add(face);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return faces;
+    }
+
+    @CacheEvict(cacheNames = "faces")
+    public void removeFromCache() {
+        System.out.println("clear faces from cache.");
     }
 
     @Cacheable(cacheNames = "face", key = "#id")
