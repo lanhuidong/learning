@@ -80,6 +80,7 @@ public class ZKBarrier implements Watcher {
 
     @Override
     public void process(WatchedEvent event) {
+        System.out.println("--------" + event.getType());
         synchronized (mutex) {
             mutex.notify();
         }
