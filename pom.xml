@@ -8,17 +8,19 @@
     <artifactId>learning</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>learning-cglib</module>
         <module>learning-java</module>
+        <module>learning-mina</module>
         <module>learning-mongodb</module>
         <module>learning-netty</module>
+        <module>learning-oauth-client</module>
+        <module>learning-oauth-server</module>
         <module>learning-rabbitmq</module>
         <module>learning-redis</module>
         <module>learning-spring</module>
+        <module>learning-springsecurity</module>
         <module>learning-tomcat</module>
         <module>learning-zookeeper</module>
-        <module>learning-mina</module>
-        <module>learning-springsecurity</module>
-        <module>learning-cglib</module>
     </modules>
     <packaging>pom</packaging>
 

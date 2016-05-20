@@ -23,7 +23,7 @@ public class Producer {
         //queue不能用不同的参数重新定义，比如已存在的queue不是durable，不能改成durable
         boolean durable = true;
         channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
-        String message = String.valueOf((int) (Math.random() * 9 + 1));
+        String message = String.valueOf((int) (Math.random() * 9 + 10));
         //queue和message都持久化的数据才不会丢失
         channel.basicPublish("", QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes("UTF-8"));
         System.out.println("Send: " + message);

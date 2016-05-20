@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http use-expressions="false" pattern="/oauth/token" create-session="stateless"
+          authentication-manager-ref="oauth2AuthenticationManager">
+        <intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
+        <csrf disabled="true"/>
+        <anonymous enabled="false"/>
+        <http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
+        <custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER"/>
+        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
+    </http>
+    <!--资源安全管理配置-->
+    <http use-expressions="false" pattern="/me" create-session="never" entry-point-ref="oauth2AuthenticationEntryPoint"
+          access-decision-manager-ref="oauth2AccessDecisionManager">
+        <anonymous enabled="false"/>
+        <intercept-url pattern="/me" access="ROLE_USER"/>
+        <custom-filter ref="userResourceServer" before="PRE_AUTH_FILTER"/>
+        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
+    </http>
+
+    <http authentication-manager-ref="authenticationManager">
+        <intercept-url pattern="/oauth/**" access="hasRole('ROLE_USER')"/>
+        <form-login login-page="/" login-processing-url="/login" default-target-url="/u/index"/>
+        <logout logout-success-url="/"/>
+        <csrf disabled="false"/>
+        <anonymous enabled="false"/>
+    </http>
+
+    <authentication-manager id="authenticationManager" alias="authenticationManager">
+        <authentication-provider>
+            <user-service>
+                <user name="user" password="111111" authorities="ROLE_USER"/>
+                <user name="admin" password="123456" authorities="ROLE_USER, ROLE_ADMIN"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+
+    <authentication-manager id="oauth2AuthenticationManager">
+        <authentication-provider user-service-ref="oauth2UserDetailsService"/>
+    </authentication-manager>
+
+    <beans:bean id="userService" class="com.nexusy.oauth.server.service.UserServiceImpl"/>
+
+
+    <beans:bean id="oauth2AuthenticationEntryPoint"
+                class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
+
+    <beans:bean id="oauth2AccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
+                <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <beans:bean id="clientCredentialsTokenEndpointFilter"
+                class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <beans:property name="authenticationManager" ref="oauth2AuthenticationManager"/>
+    </beans:bean>
+
+</beans:beans>

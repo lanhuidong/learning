@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+             http://www.springframework.org/schema/security
+             http://www.springframework.org/schema/security/spring-security.xsd
+             http://www.springframework.org/schema/security/oauth2
+             http://www.springframework.org/schema/security/spring-security-oauth2.xsd">
+
+    <http>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/user/**" access="hasRole('USER')"/>
+        <!--<intercept-url pattern="/**" access="permitAll"/>-->
+
+        <form-login login-page="/index.shtml"/>
+
+        <logout logout-success-url="/index.shtml" logout-url="/logout.shtml"/>
+        <csrf request-matcher-ref=""/>
+        <anonymous enabled="false"/>
+        <custom-filter ref="oauth2ClientContextFilter" before="EXCEPTION_TRANSLATION_FILTER"/>
+        <custom-filter ref="oAuth2AuthenticationFilter" after="FILTER_SECURITY_INTERCEPTOR"/>
+    </http>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="oAuth2AuthenticationProvider"/>
+    </authentication-manager>
+
+    <beans:bean class="com.nexusy.oauth.client.auth.Oauth2AuthenticationFilter" id="oAuth2AuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="filterProcessesUrl" value="/login.shtml"/>
+        <beans:property name="authenticationSuccessUrl" value="/u/index"/>
+        <beans:property name="authenticationFailureUrl" value="/"/>
+    </beans:bean>
+
+    <beans:bean class="com.nexusy.oauth.client.auth.Oauth2AuthenticationProvider" id="oAuth2AuthenticationProvider">
+        <beans:property name="userDetailsService" ref="userService"/>
+        <beans:property name="restTemplate" ref="restTemplate"/>
+    </beans:bean>
+
+    <beans:bean id="userService" class="com.nexusy.oauth.client.auth.UserServiceImpl"/>
+
+    <oauth2:client id="oauth2ClientContextFilter"/>
+
+    <oauth2:resource id="login" type="authorization_code" client-id="testId" client-secret="testSecret"
+                     access-token-uri="http://localhost:8080/server/oauth/token"
+                     user-authorization-uri="http://localhost:8080/server/oauth/authorize" scope="READ,WRITE"/>
+
+    <oauth2:rest-template id="restTemplate" resource="login"/>
+
+</beans:beans>
