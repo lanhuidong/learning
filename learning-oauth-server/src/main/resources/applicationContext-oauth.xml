@@ -10,7 +10,7 @@
     <!--配置认证服务器-->
     <oauth2:authorization-server client-details-service-ref="clientDetailsService" token-services-ref="tokenServices"
                                  user-approval-handler-ref="oauth2UserApprovalHandler">
-        <oauth2:authorization-code/>
+        <oauth2:authorization-code authorization-code-services-ref="authorizationCodeServices"/>
         <oauth2:implicit/>
         <oauth2:refresh-token/>
         <oauth2:client-credentials/>
@@ -18,6 +18,11 @@
     </oauth2:authorization-server>
 
     <bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
+    <bean id="authorizationCodeServices"
+          class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
         <constructor-arg ref="dataSource"/>
     </bean>
 

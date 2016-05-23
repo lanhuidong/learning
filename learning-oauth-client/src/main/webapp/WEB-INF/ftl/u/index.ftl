@@ -24,7 +24,7 @@
         </style>
     </head>
     <body>
-        <div style="text-align:center;margin-top:50px">受保护的资源
+        <div style="text-align:center;margin-top:50px">受保护的资源<a href="/client/logout.shtml">退出</a>
         </div>
     </body>
 </html>

@@ -5,20 +5,17 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author lan
  * @since 2016-05-19
  */
 @Controller
-public class LoginController {
+public class LogoutController {
 
-    @Autowired
-    private OAuth2RestTemplate oAuth2RestTemplate;
-
-    @RequestMapping("/login.shtml")
-    public void login() {
-        OAuth2AccessToken accessToken = oAuth2RestTemplate.getAccessToken();
-        System.out.println(accessToken);
+    @RequestMapping("/logout.shtml")
+    public ModelAndView logout() {
+        return new ModelAndView("/index");
     }
 }
