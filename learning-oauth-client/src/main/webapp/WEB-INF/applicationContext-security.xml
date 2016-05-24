@@ -46,7 +46,7 @@
 
     <oauth2:resource id="login" type="authorization_code" client-id="testId" client-secret="testSecret"
                      access-token-uri="http://localhost:8080/server/oauth/token"
-                     user-authorization-uri="http://localhost:8080/server/oauth/authorize" scope="READ,WRITE"/>
+                     user-authorization-uri="http://localhost:8080/server/oauth/authorize" scope="LEVEL1"/>
 
     <oauth2:rest-template id="restTemplate" resource="login"/>
 

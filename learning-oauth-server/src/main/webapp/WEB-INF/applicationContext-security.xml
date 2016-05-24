@@ -17,13 +17,22 @@
         <access-denied-handler ref="oauth2AccessDeniedHandler"/>
     </http>
     <!--资源安全管理配置-->
-    <http use-expressions="false" pattern="/me" create-session="never" entry-point-ref="oauth2AuthenticationEntryPoint"
+    <http use-expressions="true" pattern="/me" create-session="never"
+          entry-point-ref="oauth2AuthenticationEntryPoint"
           access-decision-manager-ref="oauth2AccessDecisionManager">
         <anonymous enabled="false"/>
-        <intercept-url pattern="/me" access="ROLE_USER"/>
+        <intercept-url pattern="/me" access="#oauth2.hasScope('LEVEL1')"/>
         <custom-filter ref="userResourceServer" before="PRE_AUTH_FILTER"/>
         <access-denied-handler ref="oauth2AccessDeniedHandler"/>
+        <expression-handler ref="oAuth2WebSecurityExpressionHandler"/>
     </http>
+
+    <beans:bean id="oAuth2WebSecurityExpressionHandler"
+                class="org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler"/>
+
+    <global-method-security pre-post-annotations="enabled" proxy-target-class="true">
+        <expression-handler ref="oAuth2WebSecurityExpressionHandler"/>
+    </global-method-security>
 
     <http authentication-manager-ref="authenticationManager">
         <intercept-url pattern="/oauth/**" access="hasRole('ROLE_USER')"/>
@@ -58,6 +67,9 @@
                 <beans:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
                 <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
                 <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+                <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <beans:property name="expressionHandler" ref="oAuth2WebSecurityExpressionHandler" />
+                </beans:bean>
             </beans:list>
         </beans:constructor-arg>
     </beans:bean>

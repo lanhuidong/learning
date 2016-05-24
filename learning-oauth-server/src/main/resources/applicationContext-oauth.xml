@@ -50,4 +50,5 @@
     <!--配置资源服务器-->
     <oauth2:resource-server id="userResourceServer" resource-id="user-resource" token-services-ref="tokenServices"/>
 
+
 </beans>
