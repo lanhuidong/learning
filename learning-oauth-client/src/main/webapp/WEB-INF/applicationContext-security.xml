@@ -30,7 +30,7 @@
 
     <beans:bean class="com.nexusy.oauth.client.auth.Oauth2AuthenticationFilter" id="oAuth2AuthenticationFilter">
         <beans:property name="authenticationManager" ref="authenticationManager"/>
-        <beans:property name="filterProcessesUrl" value="/login.shtml"/>
+        <beans:property name="filterProcessesUrl" value="/oauth/callback"/>
         <beans:property name="authenticationSuccessUrl" value="/u/index"/>
         <beans:property name="authenticationFailureUrl" value="/"/>
     </beans:bean>
@@ -46,7 +46,8 @@
 
     <oauth2:resource id="login" type="authorization_code" client-id="testId" client-secret="testSecret"
                      access-token-uri="http://localhost:8080/server/oauth/token"
-                     user-authorization-uri="http://localhost:8080/server/oauth/authorize" scope="LEVEL1"/>
+                     user-authorization-uri="http://localhost:8080/server/oauth/authorize"
+                     scope="LEVEL1" pre-established-redirect-uri="http://localhost/oauth/callback"/>
 
     <oauth2:rest-template id="restTemplate" resource="login"/>
 

@@ -44,8 +44,15 @@
     <bean id="oauth2AccessDeniedHandler"
           class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
 
+    <bean id="requestFactory" class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+        <constructor-arg ref="clientDetailsService"/>
+    </bean>
     <bean id="oauth2UserApprovalHandler"
-          class="org.springframework.security.oauth2.provider.approval.DefaultUserApprovalHandler"/>
+          class="org.springframework.security.oauth2.provider.approval.TokenStoreUserApprovalHandler">
+        <property name="tokenStore" ref="tokenStore"/>
+        <property name="requestFactory" ref="requestFactory"/>
+        <property name="clientDetailsService" ref="clientDetailsService" />
+    </bean>
 
     <!--配置资源服务器-->
     <oauth2:resource-server id="userResourceServer" resource-id="user-resource" token-services-ref="tokenServices"/>

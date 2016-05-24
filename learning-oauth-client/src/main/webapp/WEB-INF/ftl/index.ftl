@@ -25,7 +25,7 @@
     </head>
     <body>
         <div style="text-align:center;margin-top:50px">
-            <form action="/client/login.shtml" method="POST">
+            <form action="/client/oauth/callback" method="POST">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <button type="submit" class="btn">登录</button>
             </form>
