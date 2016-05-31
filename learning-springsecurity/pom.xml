@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.2.5.RELEASE</spring.version>
+        <spring.version>4.2.6.RELEASE</spring.version>
         <security.version>4.1.0.RELEASE</security.version>
     </properties>
 
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
-            <version>8.0.24</version>
+            <version>8.0.35</version>
             <scope>provided</scope>
         </dependency>
 

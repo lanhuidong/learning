@@ -17,7 +17,7 @@
 
         <form-login login-page="/index.shtml"/>
 
-        <logout logout-success-url="/index.shtml" logout-url="/logout.shtml"/>
+        <logout logout-success-url="/index.shtml" logout-url="/logout.shtml" invalidate-session="true"/>
         <csrf disabled="false"/>
         <anonymous enabled="false"/>
         <custom-filter ref="oauth2ClientContextFilter" before="EXCEPTION_TRANSLATION_FILTER"/>
