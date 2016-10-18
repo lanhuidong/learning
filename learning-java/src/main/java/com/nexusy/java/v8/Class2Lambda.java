@@ -4,7 +4,7 @@ package com.nexusy.java.v8;
  * @author lan
  * @since 2016-10-10
  */
-public class LambdaTest {
+public class Class2Lambda {
 
     /**
      * 匿名类和lambda表达式的几个区别
@@ -29,9 +29,20 @@ public class LambdaTest {
         r1.run();
         r2.run();
 
+        //run(()-> System.out.println("xx"));  当两个方法的参数的接口有相同的签名时，会造成方法调用混乱
+        run((Task) () -> System.out.println("xx"));
+
+    }
+
+    public void run(Runnable r) {
+
+    }
+
+    public void run(Task task) {
+
     }
 
     public static void main(String[] args) {
-        new LambdaTest().difference();
+        new Class2Lambda().difference();
     }
 }
