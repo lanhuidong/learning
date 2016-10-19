@@ -6,6 +6,8 @@ import java.time.Month;
 import java.time.temporal.ChronoField;
 
 /**
+ * LocalTime和LocalDateTime与LocalDate类似
+ *
  * @author lanhuidong
  * @since 2016-10-18
  */
