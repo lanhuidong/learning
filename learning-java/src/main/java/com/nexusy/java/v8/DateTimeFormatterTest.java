@@ -17,5 +17,8 @@ public class DateTimeFormatterTest {
 
         LocalDate day = LocalDate.parse("2016-09-09", DateTimeFormatter.ISO_LOCAL_DATE);
         System.out.println(day);
+
+        System.out.println(LocalDateTime.parse("2016-12-07T09:32:35.198-0800",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
     }
 }

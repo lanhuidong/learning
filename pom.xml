@@ -10,7 +10,6 @@
     <modules>
         <module>learning-cglib</module>
         <module>learning-java</module>
-        <module>learning-mina</module>
         <module>learning-mongodb</module>
         <module>learning-netty</module>
         <module>learning-oauth-client</module>
@@ -19,7 +18,6 @@
         <module>learning-redis</module>
         <module>learning-spring</module>
         <module>learning-springsecurity</module>
-        <module>learning-tomcat</module>
         <module>learning-zookeeper</module>
     </modules>
     <packaging>pom</packaging>
