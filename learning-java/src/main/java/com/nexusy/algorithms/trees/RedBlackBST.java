@@ -1,4 +1,4 @@
-package com.nexusy.java.algorithms;
+package com.nexusy.algorithms.trees;
 
 /**
  * @author lanhuidong
