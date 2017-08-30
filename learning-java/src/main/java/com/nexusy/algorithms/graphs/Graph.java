@@ -56,4 +56,16 @@ public class Graph {
         return adj[vertice];
     }
 
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder(verticesNum + " vertices, " + edgesNum + " edges\n");
+        for (int i = 0; i < verticesNum; i++) {
+            s.append(i).append(": ");
+            for (int w : this.adj(i)) {
+                s.append(w).append(" ");
+            }
+            s.append("\n");
+        }
+        return s.toString();
+    }
 }
