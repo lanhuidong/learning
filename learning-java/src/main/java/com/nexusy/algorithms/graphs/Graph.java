@@ -2,6 +2,7 @@ package com.nexusy.algorithms.graphs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * @author lanhuidong
@@ -13,25 +14,18 @@ public class Graph {
     private int edgesNum;        //边数
     private Bag<Integer>[] adj;  //邻接表
 
-    /**
-     * 创建一个长度为verticesNum的数组，每个数组元素是一个空链表
-     *
-     * @param verticesNum
-     */
-    public Graph(int verticesNum) {
-        this.verticesNum = verticesNum;
-        this.edgesNum = 0;
+    public Graph() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        this.verticesNum = Integer.valueOf(br.readLine());
         this.adj = new Bag[verticesNum];
         for (int i = 0; i < verticesNum; i++) {
             adj[i] = new Bag<>();
         }
-    }
-
-    public Graph(BufferedReader reader) throws IOException {
-        this(Integer.valueOf(reader.readLine()));
-        this.edgesNum = Integer.valueOf(reader.readLine());
+        br = new BufferedReader(new InputStreamReader(System.in));
+        this.edgesNum = Integer.valueOf(br.readLine());
         for (int i = 0; i < edgesNum; i++) {
-            String[] s = reader.readLine().split(" ");
+            br = new BufferedReader(new InputStreamReader(System.in));
+            String[] s = br.readLine().split(" ");
             int v1 = Integer.valueOf(s[0]);
             int v2 = Integer.valueOf(s[1]);
             addEdge(v1, v2);
@@ -49,7 +43,6 @@ public class Graph {
     public void addEdge(int v1, int v2) {
         adj[v1].add(v2);
         adj[v2].add(v1);
-        edgesNum++;
     }
 
     public Iterable<Integer> adj(int vertice) {
