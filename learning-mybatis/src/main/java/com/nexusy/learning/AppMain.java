@@ -4,6 +4,7 @@ import com.nexusy.learning.mapper.UserMapper;
 import com.nexusy.learning.model.User;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -13,6 +14,8 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,7 @@ import java.util.Map;
 public class AppMain {
 
     public static void main(String[] args) {
+        LogFactory.useLog4J2Logging();
         HikariConfig config = new HikariConfig();
         config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         config.setUsername("root");
@@ -41,7 +45,16 @@ public class AppMain {
 
         SqlSession session = sqlSessionFactory.openSession();
         UserMapper mapper = session.getMapper(UserMapper.class);
+
+        List<User> users = new ArrayList<>();
+        User u1 = new User(1L, "xx");
+        users.add(u1);
+        User u2 = new User(2L, "oo");
+        users.add(u2);
+        mapper.save(users);
+
         Map<Long, User> result = mapper.getMapResult();
         System.out.println(result);
+        session.commit();
     }
 }
