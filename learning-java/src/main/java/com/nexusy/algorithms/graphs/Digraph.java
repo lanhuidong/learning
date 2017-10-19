@@ -40,8 +40,8 @@ public class Digraph {
             adj[i] = new Bag<>();
         }
         br = new BufferedReader(new InputStreamReader(System.in));
-        this.e = Integer.valueOf(br.readLine());
-        for (int i = 0; i < e; i++) {
+        int edges = Integer.valueOf(br.readLine());
+        for (int i = 0; i < edges; i++) {
             br = new BufferedReader(new InputStreamReader(System.in));
             String[] s = br.readLine().split(" ");
             int v1 = Integer.valueOf(s[0]);
