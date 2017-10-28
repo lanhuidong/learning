@@ -1,0 +1,13 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire-candidates="*Bar">
+    <!--default-autowire-candidates匹配的是bean的id-->
+
+    <bean id="foo" class="com.nexusy.spring.ioc.Foo" autowire="byType"/>
+
+    <!--autowire-candidate只会影响基于类型的自动装配-->
+    <bean id="bar" class="com.nexusy.spring.ioc.Bar" autowire-candidate="false"/>
+
+</beans>
