@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TargetBean {
 
-    public void run() {
-        System.out.println("TargetBean.run()");
+    public void run(int i) {
+        System.out.println("TargetBean.run(" + i + ")");
     }
 
 }

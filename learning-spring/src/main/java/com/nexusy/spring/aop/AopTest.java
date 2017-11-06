@@ -12,7 +12,7 @@ public class AopTest {
     public static void main(String[] args) {
         ApplicationContext ctx = new AnnotationConfigApplicationContext(AopConfig.class);
         TargetBean targetBean = ctx.getBean(TargetBean.class);
-        targetBean.run();
+        targetBean.run(10);
     }
 
 }

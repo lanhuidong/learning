@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Aspect
-@Order(100)
-public class SystemArchitecture {
+@Order(200)
+public class SystemArchitecture2 {
 
     @Pointcut("execution(public * com.nexusy.spring.aop.*.*(..))")
     public void anyPublicMethod() {
@@ -30,9 +30,9 @@ public class SystemArchitecture {
 
     @Around("xxx()")
     public Object profile(ProceedingJoinPoint pjp) throws Throwable {
-        System.out.println("before " + pjp.getSignature().getName());
+        System.out.println("before 2 " + pjp.getSignature().getName());
         Object result = pjp.proceed();
-        System.out.println("after " + pjp.getSignature().getName());
+        System.out.println("after 2 " + pjp.getSignature().getName());
         return result;
     }
 
