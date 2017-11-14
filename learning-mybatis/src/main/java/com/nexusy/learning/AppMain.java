@@ -55,6 +55,9 @@ public class AppMain {
 
         Map<Long, User> result = mapper.getMapResult();
         System.out.println(result);
+
+        List<User> dbuser = mapper.queryUseLike("x");
+        System.out.println(dbuser.size());
         session.commit();
     }
 }

@@ -33,10 +33,11 @@ public interface UserMapper {
 
     /**
      * 以Map的形式返回查询结果，key由@MapKey注解决定，value为每一行的值
-     *
-     * @return
      */
     @Select("select id, username from users")
     @MapKey("id")
     Map<Long, User> getMapResult();
+
+    @Select("select * from users where username like \"%\"#{key}\"%\"")
+    List<User> queryUseLike(String key);
 }
