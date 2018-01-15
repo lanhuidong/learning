@@ -58,6 +58,9 @@ public class AppMain {
 
         List<User> dbuser = mapper.queryUseLike("x");
         System.out.println(dbuser.size());
+
+        dbuser = mapper.queryUserByIds(new Long[]{1L, 2L});
+        System.out.println(dbuser.size());
         session.commit();
     }
 }

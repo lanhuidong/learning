@@ -40,4 +40,12 @@ public interface UserMapper {
 
     @Select("select * from users where username like \"%\"#{key}\"%\"")
     List<User> queryUseLike(String key);
+
+    @Select("<script>"
+            + "SELECT id, username FROM users WHERE id IN "
+            + "<foreach item='id' index='index' collection='ids' open='(' separator=',' close=')'>"
+            + "#{id}"
+            + "</foreach>"
+            + "</script>")
+    List<User> queryUserByIds(@Param("ids") Long[] ids);
 }
