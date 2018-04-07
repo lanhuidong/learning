@@ -22,7 +22,7 @@ public class CustomCollectorTest {
                 .filter(i -> i % 2 == 0)
                 .limit(10)
                 .collect(new CustomCollector<>());
-        evens.stream().forEach(System.out::println);
+        evens.forEach(System.out::println);
     }
 
     static class CustomCollector<T> implements Collector<T, List<T>, List<T>> {
