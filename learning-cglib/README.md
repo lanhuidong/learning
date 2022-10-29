@@ -1,0 +1,2 @@
+通过设置系统属性cglib.debugLocation，可以将cglib生成的class文件输出到文件系统(见DebuggingClassWriter类）
+通过设置系统属性jdk.proxy.ProxyGenerator.saveGeneratedFiles，可以将jdk动态代理类输出到文件系统(见ProxyGenerator)
